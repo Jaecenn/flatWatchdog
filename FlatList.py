@@ -5,35 +5,46 @@ import google_directions as maps
 
 class Flat():
 
-    def __init__(self, flatAddr):
+    def __init__(self, flatAddr, importantLocLength):
         self.totalScore = 0
         self.scores = []
-        self.flatAddr = "address missing"
+        self.flatAddr = flatAddr
+        self.distSubscores = [0] * importantLocLength
+        self.distSubvalues = [0] * importantLocLength
+
+    def __str__(self):
+        return "Flat address: "+ self.flatAddr + ", Total: " + str(round(self.totalScore)) + ",  sub-scores: " + str(self.scores)
+
+    def calculateTotalScore(self):
+        self.totalScore = 0
+        for parameterId in range(0, len(self.scores)):
+            self.totalScore = self.totalScore + self.scores[parameterId]
 
 class FlatList():
 
     def __init__(self):
         self.flatsAddr = []
+        self.listOfFlats = []
         self.isLocationsInit = False
-        self.mainScores = []
-        self.totalScore = []
+        # self.mainScores = []
+        # self.totalScore = []
 
     def sortByScore(self):
-        print(len(self.flatsAddr))        
-        self.totalScore = [0] * len(self.flatsAddr)
+        # print(len(self.flatsAddr))        
 
         for flatId in range(0, len(self.flatsAddr)):
-            for parameterId in range(0, len(self.mainScores)):
-                self.totalScore[flatId] = self.totalScore[flatId] + self.mainScores[parameterId][0][flatId]
-                
+            self.listOfFlats[flatId].calculateTotalScore()
 
-        self.totalScore, self.scores, self.flatsAddr, self.subscores, self.subvalues = zip(*sorted(zip(self.totalScore, self.scores, self.flatsAddr, self.subscores, self.subvalues),self.totalScore, reverse=True))
-        print(len(self.flatsAddr))     
+        self.listOfFlats.sort(key=lambda x: x.totalScore, reverse=True)
+        # self.totalScore, self.scores, self.flatsAddr, self.subscores, self.subvalues = zip(*sorted(zip(self.totalScore, self.scores, self.flatsAddr, self.subscores, self.subvalues),self.totalScore, reverse=True))
+        # print(len(self.flatsAddr))     
 
     def setImportantLocations(self, locationsList):
         self.locationList = locationsList
 
     def calculateScores(self):
+
+        self.isLocationsInit = True
 
         width = self.locationList.getLength()
         height = len(self.flatsAddr)
@@ -42,13 +53,16 @@ class FlatList():
             print("No address of apartment or no imporatant location given")
             sys.exit(-1)
 
-        self.isLocationsInit = True
-
         self.scores = [0] * height
         self.subscores = [[0 for x in range(width)] for y in range(height)]
         self.subvalues = [[0 for x in range(width)] for y in range(height)]
 
         for flatId in range(0, len(self.flatsAddr)):
+
+            tempFlat = Flat(self.flatsAddr[flatId], self.locationList.getLength())
+            tempFlat.scores.append(0)
+
+
             for loc in range(0, self.locationList.getLength()):
                 time.sleep(0.1)
 
@@ -66,13 +80,14 @@ class FlatList():
                 else:
                     score = (self.locationList.getMaxTravelTime() - value )  / (self.locationList.getMaxTravelTime() / self.locationList.getWeight(loc))
 
-                self.scores[flatId] = self.scores[flatId] + score
-                self.subscores[flatId][loc] = score
-                self.subvalues[flatId][loc] = value / 60
+                # self.scores[flatId] = self.scores[flatId] + score
+                # self.subscores[flatId][loc] = score
+                # self.subvalues[flatId][loc] = value / 60
+                tempFlat.scores[0] = tempFlat.scores[0] + score
+                tempFlat.distSubscores[loc] = score
+                tempFlat.distSubvalues[loc] = value / 60
 
-
-                print(score)
-        self.mainScores.append([self.scores])
+            self.listOfFlats.append(tempFlat)        
 
     def addScoreParameter(self, maxValue, weight, scoreVector):
 
@@ -84,12 +99,8 @@ class FlatList():
             print("ER: Calculation of distances must be done before any other parameter is added")
             sys.exit(-1)
 
-        tempScores = [0] * len(self.flatsAddr)
-
         for flatId in range(0, len(self.flatsAddr)):
             value = scoreVector[flatId]
-            
-
 
             if (value == 0):
                 score = -2000
@@ -97,11 +108,8 @@ class FlatList():
                 score = 0
             else:
                 score = (maxValue - value )  / (maxValue / (weight * 100))
-            
-            tempScores[flatId] = tempScores[flatId] + score
-
-        self.mainScores.append([tempScores])
-        
+                        
+            self.listOfFlats[flatId].scores.append(score)       
 
     def prettyPrint(self):
         for flatId in range(0, len(self.flatsAddr)):
@@ -117,9 +125,11 @@ class FlatList():
         self.sortByScore()
 
         for flatId in range(0, len(self.flatsAddr)):
-            sys.stdout.write("** " + self.flatsAddr[flatId] + " ** : " + str(round(self.totalScore[flatId])))
-            sys.stdout.write(", ")
-            for parameterId in range(0, len(self.mainScores)):
-                sys.stdout.write(str(round(self.mainScores[parameterId][0][flatId])))
-                sys.stdout.write(", ")
-            sys.stdout.write("\n")
+            print(str(self.listOfFlats[flatId]))
+
+            # sys.stdout.write("** " + self.flatsAddr[flatId] + " ** : " + str(round(self.totalScore[flatId])))
+            # sys.stdout.write(", ")
+            # for parameterId in range(0, len(self.mainScores)):
+            #     sys.stdout.write(str(round(self.mainScores[parameterId][0][flatId])))
+            #     sys.stdout.write(", ")
+            # sys.stdout.write("\n")

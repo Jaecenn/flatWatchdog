@@ -50,10 +50,10 @@ def getItemsList(page_source, type, type_tag, maxCount=20):
     flatList = truncateResults(flatList, maxCount)
     return flatList
 
-# def getURLS(page_source, type, type_tag):
-#     flatList = []
-#     html_soup = BeautifulSoup(page_source, 'html.parser')
-#     for taggedItem in html_soup.find_all(type, ng-href = //detail//prodej//byt//):
-#         flatList.append(taggedItem.text)
-#     #print(flatList)
-#     return flatList
+def getURLS(page_source):
+    flatList = []
+    html_soup = BeautifulSoup(page_source, 'html.parser')
+    for taggedItem in html_soup.find_all('a', href=True):
+        flatList.append(taggedItem.text)
+    #print(flatList)
+    return flatList
