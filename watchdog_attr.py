@@ -14,6 +14,7 @@ def truncateResults(field, maxCount):
 
 
 def calculatPricePerMeter(page_source, maxCount=20):
+
     sqMetersList = scraper.getItemsList(page_source, 'span', 'name ng-binding')
     sqMetersList = sqMetersList[3:(len(sqMetersList) -3)]
 

@@ -11,9 +11,10 @@ class Flat():
         self.flatAddr = flatAddr
         self.distSubscores = [0] * importantLocLength
         self.distSubvalues = [0] * importantLocLength
+        self.url = "unknown URL"
 
     def __str__(self):
-        return "Flat address: "+ self.flatAddr + ", Total: " + str(round(self.totalScore)) + ",  sub-scores: " + str(self.scores)
+        return self.flatAddr + ", " + str(round(self.totalScore)) + ", " + str(self.scores) + ", " + self.url
 
     def calculateTotalScore(self):
         self.totalScore = 0
@@ -111,6 +112,15 @@ class FlatList():
                         
             self.listOfFlats[flatId].scores.append(score)       
 
+    def addURLs(self, urlList):
+
+        if len(urlList) != len(self.flatsAddr):
+            print("ER: URL list has incorrect length")
+            sys.exit(-1)
+
+        for flatId in range(0, len(self.flatsAddr)):
+            self.listOfFlats[flatId].url = urlList[flatId]
+
     def prettyPrint(self):
         for flatId in range(0, len(self.flatsAddr)):
             print("**** " + self.flatsAddr[flatId] + ": " + str(self.scores[flatId]))
@@ -124,9 +134,15 @@ class FlatList():
 
         self.sortByScore()
 
-        for flatId in range(0, len(self.flatsAddr)):
-            print(str(self.listOfFlats[flatId]))
+        with open("testResults.csv", "w") as outFile:
+            print("Address, Total Score, Sub-Scores, URL")
+            outFile.write("Address, Total Score, Sub-Scores, URL\n")
 
+            for flatId in range(0, len(self.flatsAddr)):
+                outFile.write(str(self.listOfFlats[flatId])+"\n")
+                print(str(self.listOfFlats[flatId]))
+
+            
             # sys.stdout.write("** " + self.flatsAddr[flatId] + " ** : " + str(round(self.totalScore[flatId])))
             # sys.stdout.write(", ")
             # for parameterId in range(0, len(self.mainScores)):

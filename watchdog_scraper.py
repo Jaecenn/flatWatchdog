@@ -50,10 +50,12 @@ def getItemsList(page_source, type, type_tag, maxCount=20):
     flatList = truncateResults(flatList, maxCount)
     return flatList
 
-def getURLS(page_source):
+def getURLS(page_source, maxCount=20):
     flatList = []
     html_soup = BeautifulSoup(page_source, 'html.parser')
     for taggedItem in html_soup.find_all('a', href=True):
-        flatList.append(taggedItem.text)
+        if "Prodej bytu" in taggedItem.text:            
+            flatList.append("https://www.sreality.cz" + taggedItem.attrs['href'])
     #print(flatList)
+    flatList = truncateResults(flatList, maxCount)
     return flatList

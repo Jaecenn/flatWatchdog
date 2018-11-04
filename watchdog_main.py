@@ -17,26 +17,16 @@ locList.setMaxTravelTime(75 * 60)
 #testAddr = ['Praha 2', 'Mládí, Praha 5 - Stodůlky', 'Augustinova, Praha 4 - Chodov', 'Koněvova, Praha 3 - Žižkov', 'Sinkulova, Praha 4 - Podolí', 'Bulovka, Praha 8 - Libeň', 'Libeňský ostrov, Praha 8 - Libeň']
 page_source = scraper.getHTML('https://www.sreality.cz/hledani/prodej/byty/praha?velikost=2%2B1,3%2Bkk,3%2B1&bez-aukce=1', True, 'page-layout')
 
-maxItems = 6
+maxItems = 10
 inputAddr = scraper.getItemsList(page_source, 'span', 'locality ng-binding', maxItems)
-listURL = scraper.getURLS(page_source)
-print(listURL)
-sys.exit(0)
 [perMeterScore, sqMetersList, priceList] = pricePerMeter.calculatPricePerMeter(page_source, maxItems)
 
 flatList.flatsAddr =  inputAddr
 flatList.setImportantLocations(locList)
 
 flatList.calculateScores()
-
-
-flatList.printInScoreOrder()
-# flatList.sortByScore()
-
-# print(flatList.flatsAddr)
-# print(flatList.scores)
-
-# flatList.prettyPrint()
+listURL = scraper.getURLS(page_source,maxItems)
+flatList.addURLs(listURL)
 
 flatList.addScoreParameter(150000, 1, perMeterScore)
 print("After price per meter")
