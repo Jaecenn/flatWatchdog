@@ -26,6 +26,7 @@ def calculatPricePerMeter(page_source, maxCount=20):
     priceList = truncateResults(priceList, maxCount)
     priceList =  [parseUtils.getPriceValue(item) for item in priceList]
 
+
     perMeterScore = [ calculateScore(price, sqMetersList[ind]) for ind, price in enumerate(priceList)]
 
     return [perMeterScore, sqMetersList, priceList]

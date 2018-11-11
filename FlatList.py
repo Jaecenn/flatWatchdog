@@ -8,13 +8,14 @@ class Flat():
     def __init__(self, flatAddr, importantLocLength):
         self.totalScore = 0
         self.scores = []
+        self.values = []
         self.flatAddr = flatAddr
         self.distSubscores = [0] * importantLocLength
         self.distSubvalues = [0] * importantLocLength
         self.url = "unknown URL"
 
     def __str__(self):
-        return self.flatAddr + ", " + str(round(self.totalScore)) + ", " + str(self.scores) + ", " + self.url
+        return self.flatAddr + "; " + str(round(self.totalScore)) + "; " + str(self.scores) + "; " +  str(self.distSubvalues) + "; " +  str(self.values) + "; " + self.url
 
     def calculateTotalScore(self):
         self.totalScore = 0
@@ -73,9 +74,11 @@ class FlatList():
                 else:
                     locAddress = self.locationList.getAddress(loc)
 
-                print(locAddress)
+                
                 value = maps.getTravelTime(True,  self.flatsAddr[flatId], locAddress )
-
+                print(locAddress)
+                print(str(value))
+                print("MaxTravelTime" + str(self.locationList.getMaxTravelTime()))
                 if (value > self.locationList.getMaxTravelTime()):
                     score = 0
                 else:
@@ -110,7 +113,9 @@ class FlatList():
             else:
                 score = (maxValue - value )  / (maxValue / (weight * 100))
                         
-            self.listOfFlats[flatId].scores.append(score)       
+            self.listOfFlats[flatId].scores.append(score)  
+            self.listOfFlats[flatId].values.append(value)  
+                 
 
     def addURLs(self, urlList):
 
@@ -136,7 +141,7 @@ class FlatList():
 
         with open("testResults.csv", "w") as outFile:
             print("Address, Total Score, Sub-Scores, URL")
-            outFile.write("Address, Total Score, Sub-Scores, URL\n")
+            outFile.write("Address; Total Score; score [distances]; score [values]; distance1; distance2; distance3; kc / m^2; URL\n")
 
             for flatId in range(0, len(self.flatsAddr)):
                 outFile.write(str(self.listOfFlats[flatId])+"\n")
