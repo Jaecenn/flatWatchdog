@@ -15,7 +15,10 @@ class Flat():
         self.url = "unknown URL"
 
     def __str__(self):
-        return self.flatAddr + "; " + str(round(self.totalScore)) + "; " + str(self.scores) + "; " +  str(self.distSubvalues) + "; " +  str(self.values) + "; " + self.url
+        return self.flatAddr + "; " + str(round(self.totalScore)) + "; " + self.prettyArray(self.scores) + "; " +  self.prettyArray(self.distSubvalues) + "; " +  self.prettyArray(self.values) + "; " + self.url
+
+    def prettyArray(self, arr):
+        return str(arr).replace(",",";").strip('[]')
 
     def calculateTotalScore(self):
         self.totalScore = 0
@@ -139,9 +142,9 @@ class FlatList():
 
         self.sortByScore()
 
-        with open("testResults.csv", "w") as outFile:
+        with open("testResults.csv", "a") as outFile:
             print("Address, Total Score, Sub-Scores, URL")
-            outFile.write("Address; Total Score; score [distances]; score [values]; distance1; distance2; distance3; kc / m^2; URL\n")
+            #outFile.write("Address; Total Score; score [distances]; score [values]; distance1; distance2; distance3; kc / m^2; URL\n")
 
             for flatId in range(0, len(self.flatsAddr)):
                 outFile.write(str(self.listOfFlats[flatId])+"\n")
