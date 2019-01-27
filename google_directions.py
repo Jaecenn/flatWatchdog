@@ -25,8 +25,10 @@ def getTravelTime(byPublic, origin, destination):
     page_json = json.loads(page.text)
     print(page_json)
     #print(page_json['origin_addresses'])
-
-    duration = page_json['rows'][0]['elements'][0]['duration']['value']
+    if 'duration' in page_json['rows'][0]['elements'][0]:
+        duration = page_json['rows'][0]['elements'][0]['duration']['value']
+    else:
+        duration = 12000
     return duration
     #print(page.text)
     #url = 'https://maps.googleapis.com/maps/api/distancematrix/json?origins=Vancouver+BC|Seattle&destinations=San+Francisco|Victoria+BC&mode=transit&transit_mode=train&key='

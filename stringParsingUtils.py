@@ -6,8 +6,12 @@ def getSqMetersValue(sqMetersString):
 
     sqMetersString= sqMetersString.replace(u'\xa0', u' ')
     sqMetersString = squareReg.findall(sqMetersString)
+
     if len(sqMetersString) == 1:
         sqMetersString = sqMetersString[0] 
+    if len(sqMetersString) == 2:
+        sqMetersString = int(sqMetersString[0])*2 + int(sqMetersString[1])
+        sqMetersString = str(sqMetersString)
     else:
         sqMetersString = "1"
 
