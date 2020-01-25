@@ -138,11 +138,11 @@ class FlatList():
             print("")
 
 
-    def printInScoreOrder(self):
+    def printInScoreOrder(self, fileName='testResults.csv'):
 
         self.sortByScore()
 
-        with open("testResults.csv", "a") as outFile:
+        with open(fileName, "a") as outFile:
             print("Address, Total Score, Sub-Scores, URL")
             #outFile.write("Address; Total Score; score [distances]; score [values]; distance1; distance2; distance3; kc / m^2; URL\n")
 

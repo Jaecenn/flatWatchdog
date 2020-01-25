@@ -9,8 +9,8 @@ def getSqMetersValue(sqMetersString):
 
     if len(sqMetersString) == 1:
         sqMetersString = sqMetersString[0] 
-    if len(sqMetersString) == 2:
-        sqMetersString = int(sqMetersString[0])*2 + int(sqMetersString[1])
+    elif len(sqMetersString) == 2:
+        sqMetersString = int(sqMetersString[0]) + round(int(sqMetersString[1])/2)
         sqMetersString = str(sqMetersString)
     else:
         sqMetersString = "1"

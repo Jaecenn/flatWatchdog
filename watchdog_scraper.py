@@ -56,6 +56,8 @@ def getURLS(page_source, maxCount=100):
     for taggedItem in html_soup.find_all('a', href=True):
         if "Prodej " in taggedItem.text:            
             flatList.append("https://www.sreality.cz" + taggedItem.attrs['href'])
+        if "Pronájem bytu" in taggedItem.text:            
+            flatList.append("https://www.sreality.cz" + taggedItem.attrs['href'])
     #print(flatList)
     flatList = truncateResults(flatList, maxCount)
     return flatList
